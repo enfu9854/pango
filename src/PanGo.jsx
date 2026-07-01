@@ -63,12 +63,12 @@ function adminFetch(p,o={}){return apiFetch(p,{...o,headers:{"x-admin-key":ADMIN
 
 // ─── Fotos reales productos ────────────────────────────────────────────────────
 const FOTOS={
-  hallulla:    "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=700&q=85",
-  corriente:   "https://images.unsplash.com/photo-1549931319-a545dcf3bc7b?w=700&q=85",
-  ciabatta:    "https://images.unsplash.com/photo-1586444248879-bc8d43673ee3?w=700&q=85",
-  emp_pino_aji:"https://images.unsplash.com/photo-1601050690597-df0568f70950?w=700&q=85",
-  emp_pino_saji:"https://images.unsplash.com/photo-1601050690597-df0568f70950?w=700&q=85",
-  emp_queso:   "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=700&q=85",
+  hallulla:     "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=700&q=85",
+  corriente:    "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=700&q=85",
+  ciabatta:     "https://images.unsplash.com/photo-1568471173242-461f0a730452?w=700&q=85",
+  emp_pino_aji: "https://images.unsplash.com/photo-1520072959219-c595dc870360?w=700&q=85",
+  emp_pino_saji:"https://images.unsplash.com/photo-1520072959219-c595dc870360?w=700&q=85",
+  emp_queso:    "https://images.unsplash.com/photo-1542834291-c514e77b215f?w=700&q=85",
 };
 
 // ─── SVG fallback ─────────────────────────────────────────────────────────────
