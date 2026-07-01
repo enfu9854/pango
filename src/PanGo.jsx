@@ -63,12 +63,12 @@ function adminFetch(p,o={}){return apiFetch(p,{...o,headers:{"x-admin-key":ADMIN
 
 // ─── Fotos reales productos ────────────────────────────────────────────────────
 const FOTOS={
-  hallulla:     "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=700&q=85",
-  corriente:    "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=700&q=85",
-  ciabatta:     "https://images.unsplash.com/photo-1568471173242-461f0a730452?w=700&q=85",
-  emp_pino_aji: "https://images.unsplash.com/photo-1520072959219-c595dc870360?w=700&q=85",
-  emp_pino_saji:"https://images.unsplash.com/photo-1520072959219-c595dc870360?w=700&q=85",
-  emp_queso:    "https://images.unsplash.com/photo-1542834291-c514e77b215f?w=700&q=85",
+  hallulla:     "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&w=700&q=80",
+  corriente:    "https://images.unsplash.com/photo-1549931319-a545dcf3bc7b?auto=format&w=700&q=80",
+  ciabatta:     "https://images.unsplash.com/photo-1586444248879-bc8d43673ee3?auto=format&w=700&q=80",
+  emp_pino_aji: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&w=700&q=80",
+  emp_pino_saji:"https://images.unsplash.com/photo-1553909489-cd47e0907980?auto=format&w=700&q=80",
+  emp_queso:    "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&w=700&q=80",
 };
 
 // ─── SVG fallback ─────────────────────────────────────────────────────────────
@@ -868,8 +868,10 @@ function CatalogCard({product,nivel,products,onOrder}){
     <div style={{background:C.bg,display:"flex",flexDirection:"column"}}>
       <div style={{height:230,overflow:"hidden",position:"relative",background:C.noir}}>
         <img src={FOTOS[product.id]||FOTOS.corriente} alt={product.name}
+          referrerPolicy="no-referrer"
+          crossOrigin="anonymous"
           style={{width:"100%",height:"100%",objectFit:"cover",filter:"brightness(.9) contrast(1.05)"}}
-          onError={e=>{e.target.style.display="none";}}/>
+          onError={e=>{e.target.style.background="#2A1A0A";e.target.style.display="none";}}/>
         <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(26,18,8,.45) 0%,transparent 60%)"}}/>
       </div>
       <div style={{padding:"20px 20px 24px",flex:1,display:"flex",flexDirection:"column"}}>
@@ -1287,11 +1289,15 @@ function MiCuenta({user,nivel}){
 function HomeScreen({onStart,onLogin,onCatalog}){
   return(
     <div>
-      <div style={{backgroundImage:"url(https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1600&q=90)",backgroundSize:"cover",backgroundPosition:"center",minHeight:"92vh",display:"flex",flexDirection:"column",
+      <div style={{minHeight:"92vh",display:"flex",flexDirection:"column",
         justifyContent:"center",alignItems:"flex-start",padding:"80px 80px",
         position:"relative",overflow:"hidden"}}>
-        <div style={{position:"absolute",inset:0,background:"rgba(10,6,2,.55)"}}/>
-        <div style={{position:"relative",zIndex:1,maxWidth:600,textAlign:"left"}}>
+        <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&w=1600&q=85"
+          referrerPolicy="no-referrer"
+          alt="Pan artesanal"
+          style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",zIndex:0}}/>
+        <div style={{position:"absolute",inset:0,background:"rgba(10,6,2,.55)",zIndex:1}}/>
+        <div style={{position:"relative",zIndex:2,maxWidth:600,textAlign:"left"}}>
           <p style={{fontSize:11,letterSpacing:5,textTransform:"uppercase",color:C.or,marginBottom:22,fontWeight:600}}>
             Artisan · Quotidien · Maison
           </p>
