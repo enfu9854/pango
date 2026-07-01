@@ -63,12 +63,12 @@ function adminFetch(p,o={}){return apiFetch(p,{...o,headers:{"x-admin-key":ADMIN
 
 // ─── Fotos reales productos ────────────────────────────────────────────────────
 const FOTOS={
-  hallulla:     "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&w=700&q=80",
-  corriente:    "https://images.unsplash.com/photo-1549931319-a545dcf3bc7b?auto=format&w=700&q=80",
-  ciabatta:     "https://images.unsplash.com/photo-1586444248879-bc8d43673ee3?auto=format&w=700&q=80",
-  emp_pino_aji: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&w=700&q=80",
-  emp_pino_saji:"https://images.unsplash.com/photo-1553909489-cd47e0907980?auto=format&w=700&q=80",
-  emp_queso:    "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&w=700&q=80",
+  hallulla:     "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=700&q=80",
+  corriente:    "https://images.unsplash.com/photo-1568471173242-461f0a730452?auto=format&fit=crop&w=700&q=80",
+  ciabatta:     "https://images.unsplash.com/photo-1534620808146-d33bb39128b2?auto=format&fit=crop&w=700&q=80",
+  emp_pino_aji: "https://images.unsplash.com/photo-1639024471283-03518883512d?auto=format&fit=crop&w=700&q=80",
+  emp_pino_saji:"https://images.unsplash.com/photo-1639024471283-03518883512d?auto=format&fit=crop&w=700&q=80",
+  emp_queso:    "https://images.unsplash.com/photo-1638507078498-3b0cb0042df5?auto=format&fit=crop&w=700&q=80",
 };
 
 // ─── SVG fallback ─────────────────────────────────────────────────────────────
@@ -995,7 +995,7 @@ function DiaPedido({fecha,fechaInfo,dia,products,nivel,onSetTurno,onAddItem,onUp
               </button>
             ))}
           </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))",gap:1,background:C.warmMid}}>
+          <div style={{display:"flex",flexDirection:"column",border:`1px solid ${C.warmMid}`,overflow:"hidden"}}>
             {products.filter(p=>filtro==="Todos"||p.category===filtro).map(p=>(
               <MiniCard key={p.id} product={p} nivel={nivel} products={products} onAdd={onAddItem}/>
             ))}
@@ -1012,36 +1012,42 @@ function MiniCard({product,nivel,products,onAdd}){
   const precio=calcPrecio(product,selW,nivel,products);
   const normal=calcPrecio(product,selW,"base",products);
   return(
-    <div style={{background:C.bg,padding:"16px 14px"}}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
-        <div style={{display:"flex",gap:10,alignItems:"center"}}>
-          <span style={{fontSize:24}}>{product.emoji}</span>
-          <div>
-            <div style={{fontWeight:600,fontSize:14,color:C.text,lineHeight:1.3}}>{product.name}</div>
-            <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.rouge,fontWeight:500}}>
-              {fmt(precio)}
-              {precio<normal&&<span style={{fontSize:12,color:C.textLight,textDecoration:"line-through",marginLeft:6,fontWeight:400}}>{fmt(normal)}</span>}
-            </div>
-          </div>
-        </div>
-        <button onClick={()=>onAdd(product,selW)} style={{
-          background:C.noir,color:C.creme,border:"none",padding:"7px 14px",
-          fontSize:11,cursor:"pointer",letterSpacing:1.5,textTransform:"uppercase",fontWeight:600,whiteSpace:"nowrap"}}>
-          + Añadir
-        </button>
+    <div style={{background:"#fff",display:"flex",alignItems:"center",gap:0,borderBottom:`1px solid ${C.warm}`}}>
+      {/* Foto */}
+      <div style={{width:90,height:90,flexShrink:0,overflow:"hidden",background:C.noir}}>
+        <img src={FOTOS[product.id]||FOTOS.corriente} alt={product.name}
+          referrerPolicy="no-referrer"
+          style={{width:"100%",height:"100%",objectFit:"cover"}}
+          onError={e=>{e.target.style.display="none";}}/>
       </div>
-      {product.weights&&(
-        <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
-          {product.weights.map(w=>(
-            <button key={w} onClick={()=>setSelW(w)} style={{
-              padding:"4px 10px",border:`1.5px solid ${selW===w?C.noir:C.warmMid}`,
-              background:selW===w?C.noir:"transparent",
-              color:selW===w?C.creme:C.textMid,fontSize:11,cursor:"pointer",fontWeight:500}}>
-              {PESOS[w]}
-            </button>
-          ))}
+      {/* Info */}
+      <div style={{flex:1,padding:"12px 14px"}}>
+        <div style={{fontWeight:600,fontSize:14,color:C.text,marginBottom:3}}>{product.name}</div>
+        <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,color:C.rouge,fontWeight:500,marginBottom:6}}>
+          {fmt(precio)}
+          {precio<normal&&<span style={{fontSize:12,color:C.textLight,textDecoration:"line-through",marginLeft:6,fontWeight:400}}>{fmt(normal)}</span>}
         </div>
-      )}
+        {product.weights&&(
+          <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
+            {product.weights.map(w=>(
+              <button key={w} onClick={()=>setSelW(w)} style={{
+                padding:"3px 9px",border:`1.5px solid ${selW===w?C.noir:C.warmMid}`,
+                background:selW===w?C.noir:"transparent",
+                color:selW===w?C.creme:C.textMid,fontSize:11,cursor:"pointer",fontWeight:500}}>
+                {PESOS[w]}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+      {/* Botón */}
+      <button onClick={()=>onAdd(product,selW)} style={{
+        background:C.noir,color:C.creme,border:"none",padding:"12px 16px",
+        fontSize:11,cursor:"pointer",letterSpacing:1.5,textTransform:"uppercase",
+        fontWeight:700,whiteSpace:"nowrap",height:"100%",alignSelf:"stretch",
+        display:"flex",alignItems:"center"}}>
+        + Añadir
+      </button>
     </div>
   );
 }
