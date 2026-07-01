@@ -1287,13 +1287,11 @@ function MiCuenta({user,nivel}){
 function HomeScreen({onStart,onLogin,onCatalog}){
   return(
     <div>
-      <div style={{background:C.noir,minHeight:"88vh",display:"flex",flexDirection:"column",
-        justifyContent:"center",alignItems:"center",textAlign:"center",padding:"80px 24px",
+      <div style={{backgroundImage:"url(https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1600&q=90)",backgroundSize:"cover",backgroundPosition:"center",minHeight:"92vh",display:"flex",flexDirection:"column",
+        justifyContent:"center",alignItems:"flex-start",padding:"80px 80px",
         position:"relative",overflow:"hidden"}}>
-        <div style={{position:"absolute",inset:0,opacity:.04,
-          backgroundImage:`radial-gradient(circle at 25% 25%, ${C.or} 1px, transparent 1px),radial-gradient(circle at 75% 75%, ${C.or} 1px, transparent 1px)`,
-          backgroundSize:"60px 60px"}}/>
-        <div style={{position:"relative",zIndex:1,maxWidth:640}}>
+        <div style={{position:"absolute",inset:0,background:"rgba(10,6,2,.55)"}}/>
+        <div style={{position:"relative",zIndex:1,maxWidth:600,textAlign:"left"}}>
           <p style={{fontSize:11,letterSpacing:5,textTransform:"uppercase",color:C.or,marginBottom:22,fontWeight:600}}>
             Artisan · Quotidien · Maison
           </p>
