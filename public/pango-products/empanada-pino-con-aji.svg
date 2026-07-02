@@ -1,0 +1,26 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+  <rect width="400" height="300" fill="#1A1208"/>
+  <ellipse cx="200" cy="210" rx="230" ry="110" fill="#2C1A0A"/>
+  <path d="M 80 190 Q 100 90 200 80 Q 300 90 320 190 Z" fill="#A06008"/>
+  <path d="M 85 188 Q 105 93 200 84 Q 295 93 315 188 Z" fill="#B87010"/>
+  <path d="M 90 186 Q 108 97 200 88 Q 292 97 310 186 Z" fill="#CC8818"/>
+  <path d="M 95 184 Q 112 102 200 93 Q 288 102 305 184 Z" fill="#DC9820"/>
+  <circle cx="80" cy="190" r="5" fill="#8B5010" opacity=".9"/>
+  <circle cx="98" cy="183" r="5" fill="#8B5010" opacity=".9"/>
+  <circle cx="116" cy="175" r="5" fill="#8B5010" opacity=".9"/>
+  <circle cx="134" cy="170" r="5" fill="#8B5010" opacity=".9"/>
+  <circle cx="152" cy="166" r="5" fill="#8B5010" opacity=".9"/>
+  <circle cx="170" cy="164" r="5" fill="#8B5010" opacity=".9"/>
+  <circle cx="188" cy="163" r="5" fill="#8B5010" opacity=".9"/>
+  <circle cx="206" cy="164" r="5" fill="#8B5010" opacity=".9"/>
+  <circle cx="224" cy="166" r="5" fill="#8B5010" opacity=".9"/>
+  <circle cx="242" cy="170" r="5" fill="#8B5010" opacity=".9"/>
+  <circle cx="260" cy="175" r="5" fill="#8B5010" opacity=".9"/>
+  <circle cx="278" cy="183" r="5" fill="#8B5010" opacity=".9"/>
+  <circle cx="296" cy="190" r="5" fill="#8B5010" opacity=".9"/>
+  <path d="M 310 100 Q 330 90 335 75 Q 340 60 328 55 Q 315 52 308 68 Q 302 82 310 100Z" fill="#C8280A"/>
+  <line x1="310" y1="100" x2="320" y2="115" stroke="#3D6B10" stroke-width="2"/>
+  <ellipse cx="175" cy="118" rx="50" ry="22" fill="#FFF8E7" opacity=".1"/>
+  <ellipse cx="200" cy="228" rx="140" ry="16" fill="#0A0604" opacity=".5"/>
+  <text x="200" y="278" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#C9A84C" letter-spacing="2" opacity=".9">EMPANADA PINO C/AJÍ</text>
+</svg>
