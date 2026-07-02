@@ -62,28 +62,275 @@ async function apiFetch(p,o={}){
 function adminFetch(p,o={}){return apiFetch(p,{...o,headers:{"x-admin-key":ADMIN_KEY,...(o.headers||{})}});}
 
 // ─── Fotos reales productos ────────────────────────────────────────────────────
-const FOTOS = {
-  hallulla:     "/pango-products/hallulla.jpg",
-  corriente:    "/pango-products/corriente.jpg",
-  ciabatta:     "/pango-products/ciabatta.jpg",
-  emp_pino_aji: "/pango-products/empanada-pino.jpg",
-  emp_pino_saji:"/pango-products/empanada-pino-sin-aji.jpg",
-  emp_queso:    "/pango-products/empanada-queso.jpg",
-};
+const FOTOS=null; // replaced by SVG illustrations
 
+// ─── Ilustraciones SVG artesanales por producto ────────────────────────────
 function ProdImg({id, height=240}){
-  const src = FOTOS[id] || FOTOS.corriente;
-
-  return (
-    <img
-      src={src}
-      alt={id.replaceAll("_", " ")}
-      height={height}
-      style={{display:"block", width:"100%", height, objectFit:"cover"}}
-      loading="lazy"
-    />
-  );
+  const imgs = {
+    hallulla: (
+      <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" width="100%" height={height} style={{display:"block"}}>
+        <rect width="400" height="300" fill="#1A1208"/>
+        {/* fondo cálido */}
+        <ellipse cx="200" cy="200" rx="220" ry="130" fill="#2C1A0A"/>
+        {/* pan hallulla - forma redonda y plana */}
+        <ellipse cx="200" cy="170" rx="130" ry="90" fill="#C8860A"/>
+        <ellipse cx="200" cy="162" rx="128" ry="85" fill="#D4920C"/>
+        <ellipse cx="200" cy="158" rx="120" ry="78" fill="#E8A820"/>
+        {/* textura superficie */}
+        <ellipse cx="200" cy="155" rx="100" ry="64" fill="#F0B830" opacity=".6"/>
+        <ellipse cx="200" cy="152" rx="80" ry="50" fill="#F5C840" opacity=".4"/>
+        {/* pinchos/marcas hallulla */}
+        {[[-40,-10],[-15,-20],[15,-20],[40,-10],[0,5],[-25,10],[25,10]].map(([x,y],i)=>(
+          <circle key={i} cx={200+x} cy={155+y} r="3" fill="#C8860A" opacity=".7"/>
+        ))}
+        {/* sombra base */}
+        <ellipse cx="200" cy="248" rx="120" ry="18" fill="#0A0604" opacity=".5"/>
+        {/* brillo */}
+        <ellipse cx="175" cy="130" rx="35" ry="20" fill="#FFF8E7" opacity=".12"/>
+        {/* texto */}
+        <text x="200" y="290" textAnchor="middle" fontFamily="Georgia,serif" fontSize="13" fill="#C9A84C" letterSpacing="4" opacity=".9">PAN HALLULLA</text>
+      </svg>
+    ),
+    corriente: (
+      <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" width="100%" height={height} style={{display:"block"}}>
+        <rect width="400" height="300" fill="#1A1208"/>
+        <ellipse cx="200" cy="210" rx="230" ry="110" fill="#2C1A0A"/>
+        {/* marraqueta - forma doble con ranura central */}
+        {/* pieza izquierda */}
+        <ellipse cx="155" cy="160" rx="85" ry="55" fill="#B8720A"/>
+        <ellipse cx="155" cy="153" rx="82" ry="50" fill="#C8820C"/>
+        <ellipse cx="155" cy="148" rx="75" ry="44" fill="#D89018"/>
+        <ellipse cx="155" cy="144" rx="65" ry="37" fill="#E8A020" opacity=".8"/>
+        {/* pieza derecha */}
+        <ellipse cx="245" cy="160" rx="85" ry="55" fill="#B8720A"/>
+        <ellipse cx="245" cy="153" rx="82" ry="50" fill="#C8820C"/>
+        <ellipse cx="245" cy="148" rx="75" ry="44" fill="#D89018"/>
+        <ellipse cx="245" cy="144" rx="65" ry="37" fill="#E8A020" opacity=".8"/>
+        {/* ranura central */}
+        <rect x="192" y="110" width="16" height="80" rx="8" fill="#8B4A06"/>
+        <rect x="195" y="115" width="10" height="70" rx="5" fill="#6B3504"/>
+        {/* sombra */}
+        <ellipse cx="200" cy="220" rx="140" ry="16" fill="#0A0604" opacity=".5"/>
+        {/* brillo izq */}
+        <ellipse cx="130" cy="128" rx="28" ry="14" fill="#FFF8E7" opacity=".1"/>
+        <ellipse cx="220" cy="128" rx="28" ry="14" fill="#FFF8E7" opacity=".1"/>
+        <text x="200" y="285" textAnchor="middle" fontFamily="Georgia,serif" fontSize="13" fill="#C9A84C" letterSpacing="4" opacity=".9">MARRAQUETA</text>
+      </svg>
+    ),
+    ciabatta: (
+      <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" width="100%" height={height} style={{display:"block"}}>
+        <rect width="400" height="300" fill="#1A1208"/>
+        <ellipse cx="200" cy="210" rx="230" ry="110" fill="#2C1A0A"/>
+        {/* ciabatta - forma alargada y rústica */}
+        <ellipse cx="200" cy="165" rx="155" ry="65" fill="#A06008"/>
+        <ellipse cx="200" cy="158" rx="152" ry="60" fill="#B87010"/>
+        <ellipse cx="200" cy="150" rx="145" ry="54" fill="#CC8818"/>
+        <ellipse cx="200" cy="144" rx="135" ry="47" fill="#DC9820"/>
+        {/* greñas/cortes */}
+        {[[-60,-8],[-20,-12],[20,-12],[60,-8]].map(([x,y],i)=>(
+          <ellipse key={i} cx={200+x} cy={144+y} rx="18" ry="5" fill="#A06008" transform={`rotate(-15,${200+x},${144+y})`} opacity=".8"/>
+        ))}
+        {/* miga interior visible lado */}
+        <ellipse cx="200" cy="148" rx="120" ry="40" fill="#F0C060" opacity=".15"/>
+        {/* sombra */}
+        <ellipse cx="200" cy="232" rx="148" ry="16" fill="#0A0604" opacity=".5"/>
+        {/* brillo */}
+        <ellipse cx="160" cy="124" rx="40" ry="14" fill="#FFF8E7" opacity=".1"/>
+        <text x="200" y="285" textAnchor="middle" fontFamily="Georgia,serif" fontSize="13" fill="#C9A84C" letterSpacing="4" opacity=".9">PAN CIABATTA</text>
+      </svg>
+    ),
+    emp_pino_aji: (
+      <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" width="100%" height={height} style={{display:"block"}}>
+        <rect width="400" height="300" fill="#1A1208"/>
+        <ellipse cx="200" cy="210" rx="230" ry="110" fill="#2C1A0A"/>
+        {/* empanada horneada - forma media luna */}
+        <path d="M 80 190 Q 100 90 200 80 Q 300 90 320 190 Z" fill="#A06008"/>
+        <path d="M 85 188 Q 105 93 200 84 Q 295 93 315 188 Z" fill="#B87010"/>
+        <path d="M 90 186 Q 108 97 200 88 Q 292 97 310 186 Z" fill="#CC8818"/>
+        <path d="M 95 184 Q 112 102 200 93 Q 288 102 305 184 Z" fill="#DC9820"/>
+        {/* repulgue/borde trenzado */}
+        {Array.from({length:14},(_, i)=>{
+          const t = i/13; const x = 80+t*240; const y = 190-Math.sin(Math.PI*t)*5;
+          return <circle key={i} cx={x} cy={y} r="5" fill="#8B5010" opacity=".9"/>;
+        })}
+        {/* ají decorativo */}
+        <path d="M 310 100 Q 330 90 335 75 Q 340 60 328 55 Q 315 52 308 68 Q 302 82 310 100Z" fill="#C8280A"/>
+        <line x1="310" y1="100" x2="320" y2="115" stroke="#3D6B10" strokeWidth="2"/>
+        {/* brillo */}
+        <ellipse cx="175" cy="118" rx="50" ry="22" fill="#FFF8E7" opacity=".1"/>
+        {/* sombra */}
+        <ellipse cx="200" cy="228" rx="140" ry="16" fill="#0A0604" opacity=".5"/>
+        <text x="200" y="278" textAnchor="middle" fontFamily="Georgia,serif" fontSize="11" fill="#C9A84C" letterSpacing="2" opacity=".9">EMPANADA PINO C/AJÍ</text>
+      </svg>
+    ),
+    emp_pino_saji: (
+      <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" width="100%" height={height} style={{display:"block"}}>
+        <rect width="400" height="300" fill="#1A1208"/>
+        <ellipse cx="200" cy="210" rx="230" ry="110" fill="#2C1A0A"/>
+        <path d="M 80 190 Q 100 90 200 80 Q 300 90 320 190 Z" fill="#A06008"/>
+        <path d="M 85 188 Q 105 93 200 84 Q 295 93 315 188 Z" fill="#B87010"/>
+        <path d="M 90 186 Q 108 97 200 88 Q 292 97 310 186 Z" fill="#CC8818"/>
+        <path d="M 95 184 Q 112 102 200 93 Q 288 102 305 184 Z" fill="#DC9820"/>
+        {Array.from({length:14},(_, i)=>{
+          const t = i/13; const x = 80+t*240; const y = 190-Math.sin(Math.PI*t)*5;
+          return <circle key={i} cx={x} cy={y} r="5" fill="#8B5010" opacity=".9"/>;
+        })}
+        <ellipse cx="175" cy="118" rx="50" ry="22" fill="#FFF8E7" opacity=".1"/>
+        <ellipse cx="200" cy="228" rx="140" ry="16" fill="#0A0604" opacity=".5"/>
+        <text x="200" y="278" textAnchor="middle" fontFamily="Georgia,serif" fontSize="11" fill="#C9A84C" letterSpacing="2" opacity=".9">EMPANADA PINO S/AJÍ</text>
+      </svg>
+    ),
+    emp_queso: (
+      <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" width="100%" height={height} style={{display:"block"}}>
+        <rect width="400" height="300" fill="#1A1208"/>
+        <ellipse cx="200" cy="210" rx="230" ry="110" fill="#2C1A0A"/>
+        <path d="M 80 190 Q 100 90 200 80 Q 300 90 320 190 Z" fill="#A06008"/>
+        <path d="M 85 188 Q 105 93 200 84 Q 295 93 315 188 Z" fill="#B87010"/>
+        <path d="M 90 186 Q 108 97 200 88 Q 292 97 310 186 Z" fill="#CC8818"/>
+        <path d="M 95 184 Q 112 102 200 93 Q 288 102 305 184 Z" fill="#DC9820"/>
+        {Array.from({length:14},(_, i)=>{
+          const t = i/13; const x = 80+t*240; const y = 190-Math.sin(Math.PI*t)*5;
+          return <circle key={i} cx={x} cy={y} r="5" fill="#8B5010" opacity=".9"/>;
+        })}
+        {/* queso derritiéndose */}
+        <path d="M 150 140 Q 160 148 170 140 Q 180 132 190 140 Q 200 148 210 140 Q 220 132 230 140 Q 240 148 250 140" stroke="#F0D060" strokeWidth="3" fill="none" opacity=".6"/>
+        <ellipse cx="175" cy="118" rx="50" ry="22" fill="#FFF8E7" opacity=".1"/>
+        <ellipse cx="200" cy="228" rx="140" ry="16" fill="#0A0604" opacity=".5"/>
+        <text x="200" y="278" textAnchor="middle" fontFamily="Georgia,serif" fontSize="11" fill="#C9A84C" letterSpacing="2" opacity=".9">EMPANADA DE QUESO</text>
+      </svg>
+    ),
+  };
+  return imgs[id] || imgs.corriente;
 }
+
+// ─── SVG fallback ─────────────────────────────────────────────────────────────
+const SVG={
+  hallulla:`<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+    <rect width="320" height="240" fill="#1A1208"/>
+    <ellipse cx="107" cy="95"  rx="55" ry="42" fill="#C8783A"/><ellipse cx="107" cy="90"  rx="52" ry="38" fill="#D4884A"/>
+    <ellipse cx="213" cy="95"  rx="55" ry="42" fill="#C47035"/><ellipse cx="213" cy="90"  rx="52" ry="38" fill="#D0804A"/>
+    <ellipse cx="107" cy="150" rx="55" ry="42" fill="#C47035"/><ellipse cx="107" cy="145" rx="52" ry="38" fill="#D0804A"/>
+    <ellipse cx="213" cy="150" rx="55" ry="42" fill="#BF6830"/><ellipse cx="213" cy="145" rx="52" ry="38" fill="#CB7840"/>
+    <ellipse cx="92"  cy="80"  rx="40" ry="28" fill="none" stroke="#E8A870" stroke-width="1" opacity=".5"/>
+    <ellipse cx="198" cy="80"  rx="40" ry="28" fill="none" stroke="#E8A870" stroke-width="1" opacity=".5"/>
+    <ellipse cx="92"  cy="135" rx="40" ry="28" fill="none" stroke="#E8A870" stroke-width="1" opacity=".5"/>
+    <ellipse cx="198" cy="135" rx="40" ry="28" fill="none" stroke="#E8A870" stroke-width="1" opacity=".5"/>
+    <ellipse cx="88"  cy="74"  rx="14" ry="8"  fill="#F0C890" opacity=".3"/>
+    <ellipse cx="194" cy="74"  rx="14" ry="8"  fill="#F0C890" opacity=".3"/>
+    <line x1="40" y1="210" x2="280" y2="210" stroke="#C9A84C" stroke-width="1" opacity=".6"/>
+    <text x="160" y="228" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#C9A84C" letter-spacing="4" opacity=".9">PAN HALLULLA</text>
+  </svg>`,
+  corriente:`<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+    <rect width="320" height="240" fill="#1A1208"/>
+    <!-- Marraqueta: dos panes unidos con surco central -->
+    <ellipse cx="160" cy="118" rx="120" ry="58" fill="#A05520"/>
+    <ellipse cx="114" cy="104" rx="72"  ry="48" fill="#C8783A"/>
+    <ellipse cx="206" cy="104" rx="72"  ry="48" fill="#C07035"/>
+    <!-- Surco central profundo -->
+    <ellipse cx="160" cy="104" rx="12"  ry="48" fill="#7A3A10" opacity=".9"/>
+    <!-- Corte superior marraqueta -->
+    <path d="M 60 88 Q 114 68 160 80 Q 206 68 260 88" fill="none" stroke="#E8A060" stroke-width="3" opacity=".7"/>
+    <!-- Textura crujiente -->
+    <path d="M 68 108 Q 114 96 160 102 Q 206 96 252 108" fill="none" stroke="#904820" stroke-width="1" opacity=".4"/>
+    <path d="M 72 118 Q 114 108 160 113 Q 206 108 248 118" fill="none" stroke="#904820" stroke-width="1" opacity=".3"/>
+    <!-- Harina superficial -->
+    <ellipse cx="95"  cy="82" rx="8"  ry="4" fill="#F0E8D5" opacity=".45"/>
+    <ellipse cx="224" cy="78" rx="7"  ry="3" fill="#F0E8D5" opacity=".4"/>
+    <ellipse cx="148" cy="76" rx="5"  ry="2" fill="#F0E8D5" opacity=".35"/>
+    <!-- Brillo -->
+    <ellipse cx="100" cy="85" rx="30" ry="12" fill="#E8C070" opacity=".22"/>
+    <ellipse cx="215" cy="82" rx="28" ry="11" fill="#E8C070" opacity=".18"/>
+    <line x1="40" y1="210" x2="280" y2="210" stroke="#C9A84C" stroke-width="1" opacity=".6"/>
+    <text x="160" y="228" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#C9A84C" letter-spacing="4" opacity=".9">MARRAQUETA</text>
+  </svg>`,
+  ciabatta:`<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+    <rect width="320" height="240" fill="#1A1208"/>
+    <ellipse cx="160" cy="118" rx="128" ry="54" fill="#9A5018"/>
+    <ellipse cx="160" cy="108" rx="124" ry="46" fill="#BA7030"/>
+    <!-- Cortes diagonales ciabatta -->
+    <line x1="88"  y1="72" x2="100" y2="142" stroke="#7A3A10" stroke-width="3" opacity=".75"/>
+    <line x1="116" y1="66" x2="128" y2="136" stroke="#7A3A10" stroke-width="3" opacity=".75"/>
+    <line x1="144" y1="63" x2="156" y2="133" stroke="#7A3A10" stroke-width="3" opacity=".75"/>
+    <line x1="172" y1="63" x2="184" y2="133" stroke="#7A3A10" stroke-width="3" opacity=".75"/>
+    <line x1="200" y1="66" x2="212" y2="136" stroke="#7A3A10" stroke-width="3" opacity=".75"/>
+    <line x1="228" y1="70" x2="240" y2="140" stroke="#7A3A10" stroke-width="3" opacity=".7"/>
+    <!-- Harina abundante -->
+    <ellipse cx="104" cy="78" rx="10" ry="5" fill="#F0E8D5" opacity=".55"/>
+    <ellipse cx="160" cy="70" rx="12" ry="5" fill="#F0E8D5" opacity=".5"/>
+    <ellipse cx="215" cy="76" rx="9"  ry="4" fill="#F0E8D5" opacity=".5"/>
+    <ellipse cx="136" cy="72" rx="7"  ry="3" fill="#F0E8D5" opacity=".4"/>
+    <ellipse cx="188" cy="73" rx="8"  ry="3" fill="#F0E8D5" opacity=".42"/>
+    <!-- Brillo -->
+    <ellipse cx="118" cy="86" rx="32" ry="12" fill="#E8C068" opacity=".2"/>
+    <line x1="40" y1="210" x2="280" y2="210" stroke="#C9A84C" stroke-width="1" opacity=".6"/>
+    <text x="160" y="228" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#C9A84C" letter-spacing="4" opacity=".9">PAN CIABATTA</text>
+  </svg>`,
+  emp_pino_aji:`<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+    <rect width="320" height="240" fill="#1A1208"/>
+    <!-- Empanada de horno: forma ovalada grande con repulgue -->
+    <ellipse cx="160" cy="120" rx="125" ry="72" fill="#B86820"/>
+    <ellipse cx="157" cy="110" rx="120" ry="64" fill="#D07838"/>
+    <!-- Repulgue inferior (borde característico) -->
+    <path d="M 38 130 Q 160 195 282 130" fill="#904818" opacity=".9" stroke="none"/>
+    <path d="M 44 128 Q 160 190 276 128" fill="none" stroke="#C07030" stroke-width="3" stroke-dasharray="9,6" opacity=".7"/>
+    <!-- Textura horneada -->
+    <path d="M 60  98 Q 160  82 260  98" fill="none" stroke="#904818" stroke-width="1.5" opacity=".45"/>
+    <path d="M 52 110 Q 160  95 268 110" fill="none" stroke="#904818" stroke-width="1"   opacity=".3"/>
+    <!-- Detalle ají: dos líneas decorativas + punto rojo -->
+    <path d="M 130 106 Q 160 98 190 106" fill="none" stroke="#904818" stroke-width="2" opacity=".6"/>
+    <circle cx="160" cy="108" r="9" fill="#8B2E1A" opacity=".9"/>
+    <circle cx="160" cy="108" r="5" fill="#C0392B"/>
+    <circle cx="157" cy="105" r="2" fill="#E84040" opacity=".7"/>
+    <!-- Brillo horneado -->
+    <ellipse cx="118" cy="92" rx="42" ry="20" fill="#F0C870" opacity=".18"/>
+    <ellipse cx="112" cy="86" rx="20" ry="9"  fill="#FFFFF0" opacity=".1"/>
+    <!-- Sésamo decorativo -->
+    <ellipse cx="200" cy="96" rx="4" ry="2" fill="#E8D080" opacity=".6" transform="rotate(-20 200 96)"/>
+    <ellipse cx="185" cy="90" rx="4" ry="2" fill="#E8D080" opacity=".5" transform="rotate(15 185 90)"/>
+    <ellipse cx="216" cy="102" rx="4" ry="2" fill="#E8D080" opacity=".55" transform="rotate(-10 216 102)"/>
+    <line x1="40" y1="210" x2="280" y2="210" stroke="#C9A84C" stroke-width="1" opacity=".6"/>
+    <text x="160" y="228" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#C9A84C" letter-spacing="3" opacity=".9">EMPANADA · PINO CON AJÍ</text>
+  </svg>`,
+  emp_pino_saji:`<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+    <rect width="320" height="240" fill="#1A1208"/>
+    <ellipse cx="160" cy="120" rx="125" ry="72" fill="#B86820"/>
+    <ellipse cx="157" cy="110" rx="120" ry="64" fill="#D07838"/>
+    <path d="M 38 130 Q 160 195 282 130" fill="#904818" opacity=".9"/>
+    <path d="M 44 128 Q 160 190 276 128" fill="none" stroke="#C07030" stroke-width="3" stroke-dasharray="9,6" opacity=".7"/>
+    <path d="M 60  98 Q 160  82 260  98" fill="none" stroke="#904818" stroke-width="1.5" opacity=".45"/>
+    <path d="M 52 110 Q 160  95 268 110" fill="none" stroke="#904818" stroke-width="1"   opacity=".3"/>
+    <!-- Sin punto rojo, con decoración neutra -->
+    <path d="M 128 104 Q 160 96 192 104" fill="none" stroke="#904818" stroke-width="2" opacity=".6"/>
+    <path d="M 136 112 Q 160 106 184 112" fill="none" stroke="#B06828" stroke-width="1.5" opacity=".5"/>
+    <!-- Brillo -->
+    <ellipse cx="118" cy="92" rx="42" ry="20" fill="#F0C870" opacity=".2"/>
+    <ellipse cx="196" cy="96" rx="4" ry="2" fill="#E8D080" opacity=".6" transform="rotate(-20 196 96)"/>
+    <ellipse cx="181" cy="90" rx="4" ry="2" fill="#E8D080" opacity=".5" transform="rotate(15 181 90)"/>
+    <ellipse cx="212" cy="102" rx="4" ry="2" fill="#E8D080" opacity=".55" transform="rotate(-10 212 102)"/>
+    <line x1="40" y1="210" x2="280" y2="210" stroke="#C9A84C" stroke-width="1" opacity=".6"/>
+    <text x="160" y="228" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#C9A84C" letter-spacing="3" opacity=".9">EMPANADA · PINO SIN AJÍ</text>
+  </svg>`,
+  emp_queso:`<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+    <rect width="320" height="240" fill="#1A1208"/>
+    <!-- Empanada queso: más dorada/amarilla -->
+    <ellipse cx="160" cy="120" rx="125" ry="72" fill="#B88020"/>
+    <ellipse cx="157" cy="110" rx="120" ry="64" fill="#D49838"/>
+    <path d="M 38 130 Q 160 195 282 130" fill="#907018" opacity=".9"/>
+    <path d="M 44 128 Q 160 190 276 128" fill="none" stroke="#C09030" stroke-width="3" stroke-dasharray="9,6" opacity=".7"/>
+    <!-- Queso derretido saliendo -->
+    <path d="M 118 112 Q 142 120 160 116 Q 178 120 202 112" fill="#F0D050" opacity=".8"/>
+    <path d="M 124 108 Q 148 116 160 113 Q 172 116 196 108" fill="#F8E060" opacity=".5"/>
+    <!-- Textura dorada -->
+    <path d="M 60 98 Q 160 82 260 98" fill="none" stroke="#907018" stroke-width="1.5" opacity=".4"/>
+    <!-- Brillo más brillante por queso -->
+    <ellipse cx="115" cy="88" rx="45" ry="22" fill="#F8E870" opacity=".2"/>
+    <ellipse cx="108" cy="82" rx="22" ry="10" fill="#FFFFE0" opacity=".12"/>
+    <ellipse cx="196" cy="94" rx="4" ry="2" fill="#E8D080" opacity=".6" transform="rotate(-20 196 94)"/>
+    <ellipse cx="181" cy="88" rx="4" ry="2" fill="#E8D080" opacity=".5" transform="rotate(15 181 88)"/>
+    <line x1="40" y1="210" x2="280" y2="210" stroke="#C9A84C" stroke-width="1" opacity=".6"/>
+    <text x="160" y="228" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#C9A84C" letter-spacing="3" opacity=".9">EMPANADA DE QUESO</text>
+  </svg>`,
+};
 
 // ─── Términos resumidos para aceptar en el registro ───────────────────────────
 const TERMINOS_RESUMEN = `Al crear una cuenta en PanGo aceptas:
@@ -213,21 +460,42 @@ export default function PanGo(){
     if(!diasConPedido.length)return showToast("Agrega al menos un producto");
     setLoading(true);
     try{
-      const b=buildings.find(b=>b.id===user?.building);
-      const results=[];
+      // Armar items para Mercado Pago
+      const mpItems=[];
       for(const fecha of diasConPedido){
         const dia=agenda[fecha];
-        const r=await apiFetch("/orders",{method:"POST",body:JSON.stringify({
-          user:{...user,buildingName:b?.name},
-          items:dia.items.map(i=>({productId:i.product.id,weight:i.weight,qty:i.qty})),
-          days:[fechas.find(f=>f.fecha===fecha)?.diaNombre||fecha],
-          shift:dia.turno,deliveryDate:fecha,
-        })}).catch(()=>({orderId:`DEMO-${fecha}`,total:dia.items.reduce((s,i)=>s+i.price*i.qty,0),sandboxUrl:"#"}));
-        results.push(r);
+        const fd=fechas.find(f=>f.fecha===fecha);
+        dia.items.forEach(i=>{
+          mpItems.push({
+            id:i.product.id,
+            title:`${i.product.name}${i.weight?` ${PESOS[i.weight]}`:""} — ${fd?.diaFull||fecha}`,
+            quantity:i.qty,
+            unit_price:i.price,
+          });
+        });
       }
+      // Llamar al endpoint serverless /api/create-preference
+      const resp = await fetch("/api/create-preference",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          items:mpItems,
+          payer:user?{email:user.email,name:user.name}:{},
+        }),
+      });
+      if(resp.ok){
+        const data=await resp.json();
+        // Redirigir directo a Mercado Pago
+        if(data.init_point) window.location.href=data.init_point;
+        else setScreen("payment");
+      } else {
+        // Si no hay token configurado, ir a pantalla demo
+        setScreen("payment");
+      }
+    }catch(e){
+      // Fallback demo
       setScreen("payment");
-    }catch(e){showToast(e.message);}
-    finally{setLoading(false);}
+    }finally{setLoading(false);}
   }
 
   return(
@@ -601,11 +869,38 @@ export default function PanGo(){
               <p style={{fontFamily:"monospace",fontSize:15,letterSpacing:2,color:C.text}}>4009 1753 3280 6176</p>
               <p style={{fontSize:13,color:C.textMid,marginTop:4,fontWeight:400}}>CVV: 123 · Venc: 11/25</p>
             </div>
-            <a href="#" style={{display:"block",background:C.noir,color:C.creme,padding:"15px 0",
-              textDecoration:"none",fontSize:13,fontWeight:600,letterSpacing:2,textTransform:"uppercase",
-              marginBottom:10,textAlign:"center"}}>
-              Pagar con Mercado Pago
-            </a>
+            <button onClick={async()=>{
+              setLoading(true);
+              try{
+                const mpItems=[];
+                diasConPedido.forEach(fecha=>{
+                  const dia=agenda[fecha];
+                  const fd=fechas.find(f=>f.fecha===fecha);
+                  dia?.items?.forEach(i=>{
+                    mpItems.push({
+                      id:i.product.id,
+                      title:`${i.product.name}${i.weight?` ${PESOS[i.weight]}`:""} — ${fd?.diaFull||fecha}`,
+                      quantity:i.qty,
+                      unit_price:i.price,
+                    });
+                  });
+                });
+                const resp=await fetch("/api/create-preference",{
+                  method:"POST",headers:{"Content-Type":"application/json"},
+                  body:JSON.stringify({items:mpItems,payer:user?{email:user.email,name:user.name}:{}}),
+                });
+                if(resp.ok){
+                  const data=await resp.json();
+                  if(data.init_point) window.location.href=data.init_point;
+                  else showToast("Configura MP_ACCESS_TOKEN en Vercel");
+                } else showToast("Configura MP_ACCESS_TOKEN en Vercel → pago simulado activo");
+              }catch{showToast("Backend MP no configurado → usa simulación");}
+              finally{setLoading(false);}
+            }} style={{display:"block",width:"100%",background:C.noir,color:C.creme,padding:"15px 0",
+              border:"none",fontSize:13,fontWeight:600,letterSpacing:2,textTransform:"uppercase",
+              marginBottom:10,cursor:"pointer"}}>
+              {loading?"Conectando…":"Pagar con Mercado Pago"}
+            </button>
             <button onClick={()=>{setAgenda({});setScreen("success");}} style={{
               background:"transparent",border:`1px solid ${C.warmMid}`,width:"100%",
               padding:"12px 0",cursor:"pointer",fontSize:12,color:C.textMid,
