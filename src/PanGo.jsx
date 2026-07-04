@@ -1803,34 +1803,10 @@ function MisCombos({combos,setCombos,products,nivel,agenda,setAgenda,fechas,show
             <button key={c} onClick={()=>setFiltro(c)} style={{padding:"6px 14px",border:`1.5px solid ${filtro===c?C.noir:C.warmMid}`,background:filtro===c?C.noir:"transparent",color:filtro===c?C.creme:C.textMid,fontSize:11,letterSpacing:1,textTransform:"uppercase",cursor:"pointer",fontWeight:500}}>{c}</button>
           ))}
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(210px,1fr))",gap:1,background:C.warmMid}}>
-          {pList.map(p=>{
-            const w=selW[p.id]||(p.weights?.[0]||null);
-            const pr=calcPrecio(p,w,nivel,products);
-            return(
-              <div key={p.id} style={{background:"#fff",padding:"14px 14px 16px"}}>
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
-                  <div style={{display:"flex",gap:10,alignItems:"center"}}>
-                    <div style={{width:40,height:40,flexShrink:0,overflow:"hidden"}}>
-                      <ProdImg id={p.id} height={40}/>
-                    </div>
-                    <div>
-                      <div style={{fontWeight:600,fontSize:13,color:C.text}}>{p.name}</div>
-                      <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:17,color:C.rouge,fontWeight:500}}>{fmt(pr)}</div>
-                    </div>
-                  </div>
-                  <button onClick={()=>addItemCombo(p,w)} style={{background:C.noir,color:C.creme,border:"none",padding:"5px 11px",fontSize:10,cursor:"pointer",letterSpacing:1.5,textTransform:"uppercase",fontWeight:700,whiteSpace:"nowrap"}}>+ Añadir</button>
-                </div>
-                {p.weights&&(
-                  <div style={{display:"flex",gap:3,flexWrap:"wrap"}}>
-                    {p.weights.map(ww=>(
-                      <button key={ww} onClick={()=>setSelW(s=>({...s,[p.id]:ww}))} style={{padding:"3px 8px",border:`1.5px solid ${w===ww?C.noir:C.warmMid}`,background:w===ww?C.noir:"transparent",color:w===ww?C.creme:C.textMid,fontSize:10,cursor:"pointer",fontWeight:500}}>{PESOS[ww]}</button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })}
+        <div style={{display:"flex",flexDirection:"column",border:`1px solid ${C.warmMid}`,overflow:"hidden"}}>
+          {pList.map(p=>(
+            <MiniCard key={p.id} product={p} nivel={nivel} products={products} onAdd={addItemCombo}/>
+          ))}
         </div>
       </div>
 
