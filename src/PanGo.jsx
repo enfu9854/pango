@@ -65,10 +65,17 @@ function adminFetch(p,o={}){return apiFetch(p,{...o,headers:{"x-admin-key":ADMIN
 const FOTOS=null; // replaced by SVG illustrations
 
 // ─── Ilustraciones SVG artesanales por producto ────────────────────────────
+const IMG_MAP = {
+  emp_pino_aji: "empanada-pino-con-aji",
+  emp_pino_saji: "empanada-pino-sin-aji",
+  emp_queso: "empanada-queso",
+};
+
 function ProdImg({id, height=240}){
+  const fileName = IMG_MAP[id] || id;
   return (
     <img
-      src={`/pango-products/${id}.jpg`}
+      src={`/pango-products/${fileName}.jpg`}
       alt={id}
       style={{width:"100%",height,objectFit:"cover",display:"block"}}
       onError={(e)=>{e.target.onerror=null;e.target.src="/pango-products/corriente.jpg";}}
