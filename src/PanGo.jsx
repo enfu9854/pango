@@ -1810,9 +1810,14 @@ function MisCombos({combos,setCombos,products,nivel,agenda,setAgenda,fechas,show
             return(
               <div key={p.id} style={{background:"#fff",padding:"14px 14px 16px"}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
-                  <div>
-                    <div style={{fontWeight:600,fontSize:13,color:C.text}}>{p.emoji} {p.name}</div>
-                    <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:17,color:C.rouge,fontWeight:500}}>{fmt(pr)}</div>
+                  <div style={{display:"flex",gap:10,alignItems:"center"}}>
+                    <div style={{width:40,height:40,flexShrink:0,overflow:"hidden"}}>
+                      <ProdImg id={p.id} height={40}/>
+                    </div>
+                    <div>
+                      <div style={{fontWeight:600,fontSize:13,color:C.text}}>{p.name}</div>
+                      <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:17,color:C.rouge,fontWeight:500}}>{fmt(pr)}</div>
+                    </div>
                   </div>
                   <button onClick={()=>addItemCombo(p,w)} style={{background:C.noir,color:C.creme,border:"none",padding:"5px 11px",fontSize:10,cursor:"pointer",letterSpacing:1.5,textTransform:"uppercase",fontWeight:700,whiteSpace:"nowrap"}}>+ Añadir</button>
                 </div>
