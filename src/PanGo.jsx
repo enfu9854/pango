@@ -13,6 +13,14 @@ const C = {
 const DIAS   = ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
 const DIAS_F = ["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"];
 const PESOS  = {500:"500 gr",1000:"1 kg",1500:"1,5 kg",2000:"2 kg"};
+function fmtCantidad(item){
+  if(item.weight){
+    const totalG=(item.qty||1)*item.weight;
+    const texto = totalG>=1000 ? `${(totalG/1000).toString().replace(".",",")} kg` : `${totalG} gr`;
+    return `${texto} de ${item.product.name}`;
+  }
+  return `${item.qty}× ${item.product.name}`;
+}
 
 const NIVELES = [
   {id:"base",      icon:"🥐", nombre:"Cliente Base",     color:C.textMid, bg:C.warm,
@@ -302,7 +310,14 @@ export default function PanGo(){
     apiFetch("/products").then(setProducts).catch(()=>setProducts(DEMO_PRODUCTS));
     apiFetch("/buildings").then(setBuildings).catch(()=>setBuildings(DEMO_BUILDINGS));
     const p=new URLSearchParams(window.location.search);
-    if(p.get("status")==="success"){setScreen("success");window.history.replaceState({},"","/");}
+    if(p.get("status")==="success"){
+      sessionStorage.removeItem("pango_agenda");
+      setScreen("success");window.history.replaceState({},"","/");
+    } else if(p.get("status")==="failure"||p.get("status")==="pending"){
+      const saved=sessionStorage.getItem("pango_agenda");
+      if(saved){try{setAgenda(JSON.parse(saved));}catch{}}
+      setScreen("payment");window.history.replaceState({},"","/");
+    }
   },[]);
   useEffect(()=>{
     if(!adminUnlocked)return;
@@ -642,7 +657,7 @@ export default function PanGo(){
                       <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
                         {dia.items.map(i=>(
                           <span key={i.key} style={{fontSize:14,color:C.textMid,fontWeight:400}}>
-                            {i.product.emoji} {i.qty}× {i.product.name}{i.weight?` ${PESOS[i.weight]}`:""}
+                            {fmtCantidad(i)}
                           </span>
                         ))}
                       </div>
@@ -765,6 +780,7 @@ export default function PanGo(){
                     });
                   });
                 });
+                sessionStorage.setItem("pango_agenda", JSON.stringify(agenda));
                 const resp=await fetch("/api/create-preference",{
                   method:"POST",headers:{"Content-Type":"application/json"},
                   body:JSON.stringify({items:mpItems,payer:user?{email:user.email,name:user.name}:{}}),
@@ -1685,7 +1701,7 @@ function MisCombos({combos,setCombos,products,nivel,agenda,setAgenda,fechas,show
                 <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:14}}>
                   {c.items.map((it,j)=>(
                     <span key={j} style={{fontSize:13,background:"#fff",border:`1px solid ${C.warmMid}`,padding:"4px 12px",color:C.text,fontWeight:500}}>
-                      {it.product.emoji} {it.qty}× {it.product.name}{it.weight?` ${PESOS[it.weight]}`:""}
+                      {fmtCantidad(it)}
                     </span>
                   ))}
                 </div>
