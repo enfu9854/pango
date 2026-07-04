@@ -285,7 +285,8 @@ const inp={
 
 // ══════════════════════════════════════════════════════════════════════════════
 export default function PanGo(){
-  const [screen,setScreen]=useState("home");
+  const [screen,_setScreen]=useState("home");
+  function setScreen(s){_setScreen(s);setScreenHistory(h=>h[h.length-1]===s?h:[...h,s]);}
   const [products,setProducts]=useState([]);
   const [buildings,setBuildings]=useState([]);
   const [user,setUser]=useState(null);
@@ -304,6 +305,7 @@ export default function PanGo(){
   const [adminData,setAdminData]=useState(null);
   const [adminOrders,setAdminOrders]=useState([]);
   const [editingProd,setEditingProd]=useState(null);
+  const [screenHistory,setScreenHistory]=useState(["home"]);
   const fechas=getFechas(4);
 
   useEffect(()=>{
@@ -330,6 +332,7 @@ export default function PanGo(){
   const diasConPedido=Object.keys(agenda).filter(f=>agenda[f]?.items?.length>0);
   const totalAgenda=diasConPedido.reduce((s,f)=>s+agenda[f].items.reduce((ss,i)=>ss+i.price*i.qty,0),0);
 
+  function goBack(){setScreenHistory(h=>{const nh=[...h];nh.pop();const prev=nh[nh.length-1]||"home";setScreen(prev);return nh;});}
   function setTurno(fecha,turno){setAgenda(a=>({...a,[fecha]:{turno,items:a[fecha]?.items||[]}}));}
   function addItem(fecha,product,weight){
     const key=`${product.id}_${weight||"u"}`;
@@ -428,6 +431,9 @@ export default function PanGo(){
               🛒 {diasConPedido.length} · {fmt(totalAgenda)}
             </button>
           )}
+          {screenHistory.length>1&&<button onClick={goBack} style={{
+            background:"transparent",color:"rgba(255,255,255,.6)",border:"none",
+            padding:"8px 10px",fontSize:18,cursor:"pointer",marginLeft:4}}>←</button>}
           <button onClick={()=>setScreen("admin")} style={{
             background:"transparent",color:"rgba(255,255,255,.3)",border:"none",
             padding:"8px 10px",fontSize:16,cursor:"pointer",marginLeft:4}}>⚙</button>
