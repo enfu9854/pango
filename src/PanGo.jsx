@@ -1704,11 +1704,14 @@ function MisCombos({combos,setCombos,products,nivel,agenda,setAgenda,fechas,show
                   </div>
                   <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:22,color:C.rouge,fontWeight:500}}>{fmt(total)}</div>
                 </div>
-                <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:14}}>
+                <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:14}}>
                   {c.items.map((it,j)=>(
-                    <span key={j} style={{fontSize:13,background:"#fff",border:`1px solid ${C.warmMid}`,padding:"4px 12px",color:C.text,fontWeight:500}}>
-                      {fmtCantidad(it)}
-                    </span>
+                    <div key={j} style={{display:"flex",alignItems:"center",gap:10,background:"#fff",border:`1px solid ${C.warmMid}`,padding:"6px 12px"}}>
+                      <div style={{width:36,height:36,flexShrink:0,overflow:"hidden"}}>
+                        <ProdImg id={it.product.id} height={36}/>
+                      </div>
+                      <span style={{fontSize:13,color:C.text,fontWeight:500}}>{fmtCantidad(it)}</span>
+                    </div>
                   ))}
                 </div>
                 <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
