@@ -1039,7 +1039,7 @@ function DiaPedido({fecha,fechaInfo,dia,products,nivel,onSetTurno,onAddItem,onUp
             <div key={i.key} style={{display:"flex",justifyContent:"space-between",alignItems:"center",
               padding:"10px 0",borderBottom:`1px solid ${C.warm}`}}>
               <span style={{fontSize:15,fontWeight:500,color:C.text}}>
-                {i.product.emoji} {i.product.name}{i.weight?` · ${PESOS[i.weight]}`:""}
+                {fmtCantidad(i)}
               </span>
               <div style={{display:"flex",alignItems:"center",gap:12}}>
                 <span style={{fontSize:14,color:C.textMid,fontWeight:500,minWidth:64,textAlign:"right"}}>{fmt(i.price*i.qty)}</span>
@@ -1781,7 +1781,7 @@ function MisCombos({combos,setCombos,products,nivel,agenda,setAgenda,fechas,show
           <div style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:C.or,marginBottom:10,fontWeight:600}}>Productos en este combo</div>
           {items.map(it=>(
             <div key={it.key} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"9px 0",borderBottom:`1px solid ${C.warm}`}}>
-              <span style={{fontSize:14,fontWeight:500,color:C.text}}>{it.product.emoji} {it.product.name}{it.weight?` · ${PESOS[it.weight]}`:""}</span>
+              <span style={{fontSize:14,fontWeight:500,color:C.text}}>{fmtCantidad(it)}</span>
               <div style={{display:"flex",alignItems:"center",gap:10}}>
                 <span style={{fontSize:13,color:C.textMid,minWidth:60,textAlign:"right"}}>{fmt(it.price*it.qty)}</span>
                 <QC qty={it.qty} onMinus={()=>updItemCombo(it.key,-1)} onPlus={()=>updItemCombo(it.key,+1)}/>
