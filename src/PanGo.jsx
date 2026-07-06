@@ -293,7 +293,9 @@ export default function PanGo(){
   const [toast,setToast]=useState("");
   const [loading,setLoading]=useState(false);
   const [agenda,setAgenda]=useState({});
-  const [diaActivo,setDiaActivo]=useState(null);
+const [diaActivo,_setDiaActivo]=useState(null);
+  const diaPedidoRef=useRef(null);
+  function setDiaActivo(f){_setDiaActivo(f);if(f)setTimeout(()=>diaPedidoRef.current?.scrollIntoView({behavior:"smooth",block:"start"}),50);}
   const [semana,setSemana]=useState(1);
   const [frecuencia,setFrecuencia]=useState("once");
   const [catFilter,setCatFilter]=useState("Todos");
