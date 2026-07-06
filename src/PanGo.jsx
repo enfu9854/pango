@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { supabase } from "./supabaseClient";
 
 const API       = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
 const ADMIN_KEY = "pango2024";
@@ -311,8 +312,14 @@ const [diaActivo,_setDiaActivo]=useState(null);
   const fechas=getFechas(4);
 
   useEffect(()=>{
-    apiFetch("/products").then(setProducts).catch(()=>setProducts(DEMO_PRODUCTS));
-    apiFetch("/buildings").then(setBuildings).catch(()=>setBuildings(DEMO_BUILDINGS));
+    supabase.from("products").select("*").then(({data,error})=>{
+      if(error||!data?.length) setProducts(DEMO_PRODUCTS);
+      else setProducts(data);
+    });
+    supabase.from("buildings").select("*").then(({data,error})=>{
+      if(error||!data?.length) setBuildings(DEMO_BUILDINGS);
+      else setBuildings(data);
+    });
     const p=new URLSearchParams(window.location.search);
     if(p.get("status")==="success"){
       sessionStorage.removeItem("pango_agenda");
@@ -851,9 +858,12 @@ const [diaActivo,_setDiaActivo]=useState(null);
                 catch(e){showToast(e.message);}
               }}
               onPriceUpdate={async(id,b,e)=>{
-                try{const u=await adminFetch(`/products/${id}`,{method:"PATCH",body:JSON.stringify({basePrice:b,pricePerExtra500:e})});
-                  setProducts(prev=>prev.map(p=>p.id===id?{...p,...u}:p));setEditingProd(null);showToast("Precio actualizado");}
-                catch(e){showToast(e.message);}
+                try{
+                  const {data,error}=await supabase.from("products").update({base_price:b,price_per_extra500:e}).eq("id",id).select().single();
+                  if(error) throw error;
+                  setProducts(prev=>prev.map(p=>p.id===id?{...p,...data}:p));
+                  setEditingProd(null);showToast("Precio actualizado");
+                } catch(err){showToast(err.message||"Error al actualizar");}
               }}
               onSendWA={async()=>{
                 const ph=prompt("WhatsApp del admin:");if(!ph)return;
