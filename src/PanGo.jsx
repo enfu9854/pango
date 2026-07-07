@@ -316,6 +316,13 @@ const [diaActivo,_setDiaActivo]=useState(null);
       if(error||!data?.length) setProducts(DEMO_PRODUCTS);
       else setProducts(data);
     });
+    supabase.auth.getSession().then(({data:{session}})=>{
+      if(session?.user){
+        supabase.from("app_users").select("*").eq("id",session.user.id).single().then(({data})=>{
+          if(data) setUser(data);
+        });
+      }
+    });
     supabase.from("buildings").select("*").then(({data,error})=>{
       if(error||!data?.length) setBuildings(DEMO_BUILDINGS);
       else setBuildings(data);
@@ -521,11 +528,18 @@ const [diaActivo,_setDiaActivo]=useState(null);
             </div>
             <Divider label="o con email"/>
             <div style={{background:C.bg,border:`1.5px solid ${C.warmMid}`,padding:32}}>
-              <RegisterForm buildings={buildings} onSubmit={data=>{
-                setUser({...data,nivel:"base",mesesActivo:0,promedioUlt3:0,
-                  referidos:[],historial:[],pedidosPendientes:[],
-                  codigoReferido:`${data.name.split(" ")[0].toUpperCase()}-${data.apt}`,
-                  miembroDesde:new Date().toISOString().split("T")[0]});
+              <RegisterForm buildings={buildings} onSubmit={async data=>{
+                const {data:authData,error:authError}=await supabase.auth.signUp({email:data.email,password:data.pass});
+                if(authError){showToast(authError.message);return;}
+                const uid=authData.user?.id;
+                if(!uid){showToast("Error al crear la cuenta");return;}
+                const codigoReferido=`${data.name.split(" ")[0].toUpperCase()}-${data.apt}`;
+                const {data:profile,error:profileError}=await supabase.from("app_users").insert({
+                  id:uid,name:data.name,email:data.email,phone:data.phone,
+                  building_id:data.building,apt:data.apt,codigo_referido:codigoReferido,
+                }).select().single();
+                if(profileError){showToast(profileError.message);return;}
+                setUser(profile);
                 setScreen("agenda");
               }} showToast={showToast}/>
             </div>
@@ -542,25 +556,14 @@ const [diaActivo,_setDiaActivo]=useState(null);
         <Wrap>
           <PT title="Ingresar" sub="Bienvenido de vuelta"/>
           <div style={{maxWidth:440,margin:"0 auto"}}>
-            <div style={{display:"grid",gap:10,marginBottom:20}}>
-              {[{icon:"💬",label:"Entrar con WhatsApp"},{icon:"G",label:"Entrar con Google"},{icon:"🍎",label:"Entrar con Apple"}].map(o=>(
-                <button key={o.label} onClick={()=>{setUser(DEMO_CUENTA);setScreen("agenda");}} style={{
-                  display:"flex",alignItems:"center",gap:16,
-                  background:C.bg,border:`1.5px solid ${C.warmMid}`,
-                  padding:"15px 22px",cursor:"pointer",fontSize:15,fontWeight:500,color:C.text,width:"100%"}}>
-                  <span style={{fontSize:22,minWidth:28,textAlign:"center"}}>{o.icon}</span>{o.label}
-                </button>
-              ))}
-            </div>
-            <Divider label="o con email"/>
-            <div style={{background:C.bg,border:`1.5px solid ${C.warmMid}`,padding:28}}>
-              <FL label="Email"><input style={inp} type="email" placeholder="tu@email.com"/></FL>
-              <FL label="Contraseña"><input style={inp} type="password" placeholder="••••••••"/></FL>
-              <button style={{...btnP(),marginTop:22}} onClick={()=>{setUser(DEMO_CUENTA);setScreen("agenda");}}>
-                Ingresar
-              </button>
-              <p style={{textAlign:"center",marginTop:12,fontSize:13,color:C.textLight}}>Demo: cualquier dato funciona</p>
-            </div>
+            <LoginForm onSubmit={async(email,pass)=>{
+              const {data:authData,error:authError}=await supabase.auth.signInWithPassword({email,password:pass});
+              if(authError){showToast(authError.message);return;}
+              const {data:profile,error:profileError}=await supabase.from("app_users").select("*").eq("id",authData.user.id).single();
+              if(profileError||!profile){showToast("No se encontro el perfil de usuario");return;}
+              setUser(profile);
+              setScreen("agenda");
+            }}/>
             <p style={{textAlign:"center",marginTop:16,fontSize:14,color:C.textLight}}>
               ¿No tienes cuenta?{" "}
               <span onClick={()=>setScreen("register")} style={{color:C.rouge,cursor:"pointer",fontWeight:600}}>Crear cuenta</span>
@@ -891,6 +894,23 @@ const [diaActivo,_setDiaActivo]=useState(null);
 }
 
 // ─── FORMULARIO DE REGISTRO COMPLETO ─────────────────────────────────────────
+function LoginForm({onSubmit}){
+  const [email,setEmail]=useState("");
+  const [pass,setPass]=useState("");
+  const [loading,setLoading]=useState(false);
+  return(
+    <div style={{background:C.bg,border:`1.5px solid ${C.warmMid}`,padding:28}}>
+      <FL label="Email"><input style={inp} type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="tu@email.com"/></FL>
+      <FL label="Contraseña"><input style={inp} type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="••••••••"/></FL>
+      <button style={{...btnP(loading),marginTop:22}} disabled={loading} onClick={async()=>{
+        setLoading(true);await onSubmit(email,pass);setLoading(false);
+      }}>
+        {loading?"Ingresando…":"Ingresar"}
+      </button>
+    </div>
+  );
+}
+
 function RegisterForm({buildings,onSubmit,showToast}){
   const [form,setForm]=useState({name:"",email:"",phone:"",building:"",apt:"",referido:"",pass:""});
   const [aceptado,setAceptado]=useState(false);
