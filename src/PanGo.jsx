@@ -531,8 +531,13 @@ const [diaActivo,_setDiaActivo]=useState(null);
               <RegisterForm buildings={buildings} onSubmit={async data=>{
                 const {data:authData,error:authError}=await supabase.auth.signUp({email:data.email,password:data.pass});
                 if(authError){showToast(authError.message);return;}
-                const uid=authData.user?.id;
+                let uid=authData.user?.id;
                 if(!uid){showToast("Error al crear la cuenta");return;}
+                if(!authData.session){
+                  const {data:signInData,error:signInError}=await supabase.auth.signInWithPassword({email:data.email,password:data.pass});
+                  if(signInError){showToast("Cuenta creada, pero no se pudo iniciar sesion automaticamente. Intenta ingresar manualmente.");return;}
+                  uid=signInData.user.id;
+                }
                 const codigoReferido=`${data.name.split(" ")[0].toUpperCase()}-${data.apt}`;
                 const {data:profile,error:profileError}=await supabase.from("app_users").insert({
                   id:uid,name:data.name,email:data.email,phone:data.phone,
