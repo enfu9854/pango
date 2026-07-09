@@ -561,7 +561,7 @@ const [diaActivo,_setDiaActivo]=useState(null);
         <Wrap>
           <PT title="Ingresar" sub="Bienvenido de vuelta"/>
           <div style={{maxWidth:440,margin:"0 auto"}}>
-            <LoginForm onSubmit={async(email,pass)=>{
+            <LoginForm showToast={showToast} onSubmit={async(email,pass)=>{
               const {data:authData,error:authError}=await supabase.auth.signInWithPassword({email,password:pass});
               if(authError){showToast(authError.message);return;}
               const {data:profile,error:profileError}=await supabase.from("app_users").select("*").eq("id",authData.user.id).single();
@@ -899,10 +899,16 @@ const [diaActivo,_setDiaActivo]=useState(null);
 }
 
 // ─── FORMULARIO DE REGISTRO COMPLETO ─────────────────────────────────────────
-function LoginForm({onSubmit}){
+function LoginForm({onSubmit,showToast}){
   const [email,setEmail]=useState("");
   const [pass,setPass]=useState("");
   const [loading,setLoading]=useState(false);
+  async function recuperar(){
+    if(!email){showToast("Escribe tu email primero");return;}
+    const {error}=await supabase.auth.resetPasswordForEmail(email);
+    if(error) showToast(error.message);
+    else showToast("Te enviamos un email para restablecer tu contraseña");
+  }
   return(
     <div style={{background:C.bg,border:`1.5px solid ${C.warmMid}`,padding:28}}>
       <FL label="Email"><input style={inp} type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="tu@email.com"/></FL>
@@ -912,18 +918,23 @@ function LoginForm({onSubmit}){
       }}>
         {loading?"Ingresando…":"Ingresar"}
       </button>
+      <p style={{textAlign:"center",marginTop:12,fontSize:13,color:C.rouge,cursor:"pointer",fontWeight:600}} onClick={recuperar}>
+        ¿Olvidaste tu contraseña?
+      </p>
     </div>
   );
 }
 
 function RegisterForm({buildings,onSubmit,showToast}){
-  const [form,setForm]=useState({name:"",email:"",phone:"",building:"",apt:"",referido:"",pass:""});
+  const [form,setForm]=useState({name:"",email:"",phone:"",building:"",apt:"",referido:"",pass:"",pass2:""});
   const [aceptado,setAceptado]=useState(false);
   const [verTerminos,setVerTerminos]=useState(false);
   const f=k=>e=>setForm(p=>({...p,[k]:e.target.value}));
   function submit(e){
     e.preventDefault();
     if(!form.name||!form.email||!form.phone||!form.building||!form.apt)return showToast("Completa todos los campos obligatorios");
+    if(form.pass.length<6)return showToast("La contrasena debe tener al menos 6 caracteres");
+    if(form.pass!==form.pass2)return showToast("Las contrasenas no coinciden");
     if(!aceptado)return showToast("Debes aceptar los Términos y Condiciones");
     onSubmit(form);
   }
@@ -943,6 +954,7 @@ function RegisterForm({buildings,onSubmit,showToast}){
         <FL label="Código de referido"><input style={inp} value={form.referido} onChange={f("referido")} placeholder="Ej: MARIA-504"/></FL>
       </div>
       <FL label="Contraseña *"><input style={inp} type="password" value={form.pass} onChange={f("pass")} placeholder="Mínimo 8 caracteres" required/></FL>
+      <FL label="Confirmar contrasena *"><input style={inp} type="password" value={form.pass2} onChange={f("pass2")} placeholder="Repite tu contrasena" required/></FL>
 
       {/* Términos y condiciones */}
       <div style={{marginTop:22,background:C.warm,border:`1px solid ${C.warmMid}`,padding:16}}>
