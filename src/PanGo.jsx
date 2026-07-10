@@ -533,7 +533,7 @@ const [diaActivo,_setDiaActivo]=useState(null);
                 if(authError){showToast(authError.message);return;}
                 const uid=authData.user?.id;
                 if(!uid){showToast("Error al crear la cuenta");return;}
-                let sess=null;for(let i=0;i<10&&!sess;i++){await new Promise(r=>setTimeout(r,300));const{data}=await supabase.auth.getSession();sess=data.session;}                const codigoReferido=`${data.name.split(" ")[0].toUpperCase()}-${data.apt}`;
+                if(authData.session){await supabase.auth.setSession({access_token:authData.session.access_token,refresh_token:authData.session.refresh_token});}else{showToast("Cuenta creada. Por favor inicia sesion manualmente.");return;}                const codigoReferido=`${data.name.split(" ")[0].toUpperCase()}-${data.apt}`;
                 const {data:profile,error:profileError}=await supabase.from("app_users").insert({
                   id:uid,name:data.name,email:data.email,phone:data.phone,
                   building_id:data.building,apt:data.apt,codigo_referido:codigoReferido,
